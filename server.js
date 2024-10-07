@@ -47,7 +47,7 @@ const PORT = process.env.PORT || 5000;
 // Update CORS configuration
 app.use(cors({
   origin: 'https://github-login-three.vercel.app',
-  methods: ['GET', 'POST', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
