@@ -160,7 +160,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // GitHub Personal Access Token
-const GITHUB_TOKEN = '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';
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Use environment variable
 
 // CORS configuration
 const corsOptions = {
@@ -172,7 +172,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
 app.use(express.json());
 
 // Pre-flight requests
@@ -184,8 +183,8 @@ app.post('/api/auth/github', async (req, res) => {
 
   try {
     const response = await axios.post('https://github.com/login/oauth/access_token', {
-      client_id: "Ov23li2EE68XAUxEK2Vm",
-      client_secret: "e5a0837ccd64f5a2322b7fddddff225438b82847",
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_CLIENT_SECRET,
       code,
     }, {
       headers: { Accept: 'application/json' },
