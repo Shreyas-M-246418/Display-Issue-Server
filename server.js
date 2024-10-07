@@ -34,7 +34,6 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });*/
 
-
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
@@ -45,17 +44,24 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Update CORS configuration
 app.use(cors({
-  origin: "https://github-login-three.vercel.app/" || 'http://localhost:3000'
+  origin: 'https://github-login-three.vercel.app',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }));
+
 app.use(express.json());
+
+app.options('*', cors()); // Enable pre-flight requests for all routes
 
 app.post('/api/auth/github', async (req, res) => {
   const { code } = req.body;
 
   try {
     const response = await axios.post('https://github.com/login/oauth/access_token', {
-      client_id:"Ov23li2EE68XAUxEK2Vm",
+      client_id: "Ov23li2EE68XAUxEK2Vm",
       client_secret: "e5a0837ccd64f5a2322b7fddddff225438b82847",
       code,
     }, {
