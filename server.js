@@ -159,6 +159,9 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// GitHub Personal Access Token
+const GITHUB_TOKEN = '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';
+
 // CORS configuration
 const corsOptions = {
   origin: ['https://github-login-three.vercel.app', 'http://localhost:3000'],
@@ -203,7 +206,8 @@ app.get('/api/github/issues', async (req, res) => {
     const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}/issues`, {
       headers: {
         'Accept': 'application/vnd.github.v3+json',
-        'User-Agent': 'YourAppName'
+        'User-Agent': 'YourAppName',
+        'Authorization': `token ${GITHUB_TOKEN}`
       }
     });
     res.json(response.data);
@@ -215,7 +219,6 @@ app.get('/api/github/issues', async (req, res) => {
 
 app.post('/api/github/issues', async (req, res) => {
   const { owner, repo, title, body } = req.body;
-  const token = req.headers.authorization;
 
   try {
     console.log(`Creating issue for ${owner}/${repo}`);
@@ -224,7 +227,7 @@ app.post('/api/github/issues', async (req, res) => {
       { title, body },
       {
         headers: {
-          'Authorization': token,
+          'Authorization': `token ${GITHUB_TOKEN}`,
           'Accept': 'application/vnd.github.v3+json',
           'User-Agent': 'YourAppName'
         },
