@@ -154,7 +154,35 @@ app.use((err, req, res, next) => {
 
 // GitHub OAuth route
 app.post('/api/auth/github', async (req, res, next) => {
-  // ... (keep the existing OAuth logic)
+  const { code } = req.body;
+
+  if (!code) {
+    console.log('No authorization code provided');
+    return res.status(400).json({ message: 'Authorization code is required' });
+  }
+
+  try {
+    console.log('Exchanging code for token...');
+    const response = await axios.post('https://github.com/login/oauth/access_token', {
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_CLIENT_SECRET,
+      code,
+    }, {
+      headers: { Accept: 'application/json' },
+    });
+
+    console.log('Token exchange response:', response.data);
+    
+    if (response.data.error) {
+      console.error('Error from GitHub:', response.data.error);
+      return res.status(400).json({ message: 'Failed to exchange code for token', error: response.data.error });
+    }
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error in /api/auth/github:', error.response ? error.response.data : error.message);
+    res.status(500).json({ message: 'Failed to exchange code for token', error: error.message });
+  }
 });
 
 // Job ID counter (This should ideally be stored in a database)
